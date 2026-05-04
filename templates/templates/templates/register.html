@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar - VendiAI{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>📝 Criar Conta VendiAI</h2>
+        <p>Comece a ganhar dinheiro com IA agora!</p>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">Nome de Usuário</label>
+                <input type="text" id="username" name="username" placeholder="seu_usuario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+        </form>
+
+        <div id="message" class="message"></div>
+
+        <p class="auth-link">
+            Já tem conta? <a href="{{ url_for('login') }}">Faça login aqui</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const messageDiv = document.getElementById('message');
+
+    try {
+        const response = await fetch('{{ url_for("register") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            messageDiv.className = 'message success';
+            messageDiv.textContent = 'Registrado com sucesso! Redirecionando...';
+            setTimeout(() => {
+                window.location.href = '{{ url_for("login") }}';
+            }, 2000);
+        } else {
+            messageDiv.className = 'message error';
+            messageDiv.textContent = data.error || 'Erro ao registrar';
+        }
+    } catch (error) {
+        messageDiv.className = 'message error';
+        messageDiv.textContent = 'Erro na conexão: ' + error.message;
+    }
+});
+</script>
+{% endblock %}
