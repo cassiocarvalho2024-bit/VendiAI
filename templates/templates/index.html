@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}VendiAI - Ganhe Dinheiro com IA{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>🚀 Venda Mais com VendiAI</h1>
+        <p>Gerador de Conteúdo com IA para Aumentar Suas Vendas</p>
+        <p class="subtitle">Crie propostas, mensagens de venda e posts automáticos em segundos!</p>
+        
+        <div class="cta-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Começar Grátis</a>
+            <a href="{{ url_for('pricing') }}" class="btn btn-secondary btn-large">Ver Planos</a>
+        </div>
+    </div>
+
+    <div class="hero-features">
+        <div class="feature-card">
+            <h3>📝 Mensagens de Venda</h3>
+            <p>Crie textos persuasivos para WhatsApp, Instagram e Email</p>
+        </div>
+        <div class="feature-card">
+            <h3>💼 Propostas Profissionais</h3>
+            <p>Gere orçamentos e propostas em segundos</p>
+        </div>
+        <div class="feature-card">
+            <h3>📱 Posts para Redes Sociais</h3>
+            <p>Conteúdo pronto para Instagram, TikTok e Facebook</p>
+        </div>
+        <div class="feature-card">
+            <h3>⚡ Super Rápido</h3>
+            <p>Powered by IA - Resultados em segundos</p>
+        </div>
+    </div>
+</div>
+
+<div class="benefits-section">
+    <h2>Por Que Usar VendiAI?</h2>
+    <div class="benefits-grid">
+        <div class="benefit">
+            <span class="icon">💰</span>
+            <h4>Aumente Vendas</h4>
+            <p>Conteúdo profissional = mais conversões</p>
+        </div>
+        <div class="benefit">
+            <span class="icon">⏱️</span>
+            <h4>Economize Tempo</h4>
+            <p>Crie em segundos, não em horas</p>
+        </div>
+        <div class="benefit">
+            <span class="icon">🎯</span>
+            <h4>Estratégico</h4>
+            <p>IA ajustada para vendas e conversão</p>
+        </div>
+        <div class="benefit">
+            <span class="icon">💯</span>
+            <h4>Fácil de Usar</h4>
+            <p>Interface intuitiva, sem complicações</p>
+        </div>
+    </div>
+</div>
+
+<div class="testimonials-section">
+    <h2>O Que Dizem Sobre VendiAI</h2>
+    <div class="testimonials">
+        <div class="testimonial">
+            <p>"Comecei a usar e meus orçamentos ficam muito mais profissionais!"</p>
+            <span>- João, Eletricista</span>
+        </div>
+        <div class="testimonial">
+            <p>"Economizo 1 hora por dia criando propostas. Muito bom!"</p>
+            <span>- Maria, Consultora</span>
+        </div>
+        <div class="testimonial">
+            <p>"Meus posts no Instagram ficaram bem melhores e engajam muito mais!"</p>
+            <span>- Pedro, Influenciador</span>
+        </div>
+    </div>
+</div>
+
+<div class="cta-final">
+    <h2>Pronto Para Vender Mais?</h2>
+    <p>Teste grátis agora e veja a diferença!</p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Registrar Grátis</a>
+</div>
+{% endblock %}
