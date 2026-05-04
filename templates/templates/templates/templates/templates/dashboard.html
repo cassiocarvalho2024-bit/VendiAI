@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - VendiAI{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Bem-vindo, {{ user.username }}! 🚀</h1>
+        <p>Seu Plano: <strong>{{ user.plan.upper() }}</strong></p>
+        <p>Gerações este mês: <strong>{{ month_generations }}/{{ limit if limit != float('inf') else '∞' }}</strong></p>
+        {% if user.plan == 'free' %}
+            <a href="{{ url_for('pricing') }}" class="btn btn-primary">Fazer Upgrade</a>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-container">
+        <!-- GERADOR DE CONTEÚDO -->
+        <div class="generator-section">
+            <h2>📝 Gerador de Conteúdo com IA</h2>
+
+            <div class="form-group">
+                <label for="contentType">Tipo de Conteúdo:</label>
+                <select id="contentType">
+                    <option value="mensagem_venda">📱 Mensagem de Venda (WhatsApp/Instagram)</option>
+                    <option value="proposta">💼 Proposta/Orçamento</option>
+                    <option value="post_redes">📸 Post para Redes Sociais</option>
+                    <option value="email">📧 Email de Venda</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="userInput">Descreva seu serviço/produto:</label>
+                <textarea id="userInput" placeholder="Ex: Sou eletricista, faço instalações residenciais, tenho 10 anos de experiência..." rows="4"></textarea>
+            </div>
+
+            <button id="generateBtn" class="btn btn-primary btn-large">🤖 Gerar com IA</button>
+
+            <div id="loadingSpinner" class="spinner" style="display:none;"></div>
+            <div id="message" class="message"></div>
+
+            <div id="resultBox" class="result-box" style="display:none;">
+                <h3>✨ Conteúdo Gerado:</h3>
+                <div id="generatedContent" class="generated-content"></div>
+                <div class="result-actions">
+                    <button id="copyBtn" class="btn btn-secondary">📋 Copiar</button>
+                    <button id="downloadBtn" class="btn btn-secondary">⬇️ Baixar PDF</button>
+                    <button id="newGenerationBtn" class="btn btn-primary">🔄 Nova Geração</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTÓRICO -->
+        <div class="history-section">
+            <h2>📜 Histórico de Gerações</h2>
+            <div id="historyList" class="history-list">
+                {% if generations %}
+                    {% for gen in generations %}
+                        <div class="history-item">
+                            <strong>{{ gen.content_type|replace('_', ' ')|title }}</strong>
+                            <p>{{ gen.input_text[:100] }}...</p>
+                            <small>{{ gen.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                            <button class="btn btn-small btn-danger" onclick="deleteGeneration({{ gen.id }})">🗑️ Deletar</button>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-state">Nenhuma geração ainda. Comece a criar! 🎯</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentGenerationId = null;
+
+document.getElementById('generateBtn').addEventListener('click', async () => {
+    const contentType = document.getElementById('contentType').value;
+    const userInput = document.getElementById('userInput').value;
+    const messageDiv = document.getElementById('message');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const resultBox = document.getElementById('resultBox');
+
+    if (!userInput.trim()) {
+        messageDiv.className = 'message error';
+        messageDiv.textContent = '❌ Por favor, descreva seu serviço/produto!';
+        return;
+    }
+
+    loadingSpinner.style.display = 'block';
+    messageDiv.textContent = '';
+    resultBox.style.display = 'none';
+
+    try {
+        const response = await fetch('{{ url_for("generate_content") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                content_type: contentType, 
+                user_input: userInput 
+            })
+        });
+
+        const data = await response.json();
+        loadingSpinner.style.display = 'none';
+
+        if (response.ok) {
+            currentGenerationId = data.id;
+            document.getElementById('generatedContent').innerHTML = `<p>${data.content.replace(/\n/g, '<br>')}</p>`;
+            resultBox.style.display = 'block';
+            messageDiv.className = 'message success';
+            messageDiv.textContent = '✅ Conteúdo gerado com sucesso!';
+        } else {
+            messageDiv.className = 'message error';
+            messageDiv.textContent = '❌ ' + (data.error || 'Erro ao gerar conteúdo');
+        }
+    } catch (error) {
+        loadingSpinner.style.display = 'none';
+        messageDiv.className = 'message error';
+        messageDiv.textContent = '❌ Erro na conexão: ' + error.message;
+    }
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+    const content = document.getElementById('generatedContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+        alert('✅ Copiado para a área de transferência!');
+    });
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+    const content = document.getElementById('generatedContent').innerText;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'conteudo_vendiAI.txt';
+    a.click();
+});
+
+document.getElementById('newGenerationBtn').addEventListener('click', () => {
+    document.getElementById('userInput').value = '';
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('userInput').focus();
+});
+
+async function deleteGeneration(id) {
+    if (confirm('Tem certeza que quer deletar?')) {
+        try {
+            const response = await fetch(`{{ url_for('delete_generation', generation_id=0) }}`.replace('0', id), {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            alert('Erro ao deletar: ' + error.message);
+        }
+    }
+}
+</script>
+{% endblock %}
