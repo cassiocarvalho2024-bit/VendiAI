@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Planos - VendiAI{% endblock %}
+
+{% block content %}
+<div class="pricing-page">
+    <div class="pricing-header">
+        <h1>💰 Escolha Seu Plano</h1>
+        <p>Comece grátis e aumente conforme sua demanda!</p>
+    </div>
+
+    <div class="pricing-cards">
+        <!-- PLANO FREE -->
+        <div class="pricing-card free">
+            <div class="plan-badge">Popular</div>
+            <h3>Free</h3>
+            <div class="price">
+                <span class="amount">Grátis</span>
+            </div>
+            <p class="description">Perfeito para começar</p>
+            
+            <ul class="features">
+                <li>✅ 5 gerações por mês</li>
+                <li>✅ Todos os tipos de conteúdo</li>
+                <li>✅ Suporte por email</li>
+                <li>❌ Sem prioridade</li>
+            </ul>
+            
+            {% if session.user_id and session.plan == 'free' %}
+                <button class="btn btn-secondary btn-block" disabled>Seu Plano Atual</button>
+            {% elif session.user_id %}
+                <a href="#" class="btn btn-secondary btn-block">Fazer Downgrade</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Começar Grátis</a>
+            {% endif %}
+        </div>
+
+        <!-- PLANO STARTER -->
+        <div class="pricing-card starter highlighted">
+            <div class="plan-badge">Recomendado</div>
+            <h3>Starter</h3>
+            <div class="price">
+                <span class="amount">R$ 9,90</span>
+                <span class="period">/mês</span>
+            </div>
+            <p class="description">Para pequenos negócios</p>
+            
+            <ul class="features">
+                <li>✅ 100 gerações por mês</li>
+                <li>✅ Todos os tipos de conteúdo</li>
+                <li>✅ Suporte prioritário</li>
+                <li>✅ Templates customizados</li>
+                <li>❌ Integração com ferramentas</li>
+            </ul>
+            
+            {% if session.user_id and session.plan == 'starter' %}
+                <button class="btn btn-primary btn-block" disabled>Seu Plano Atual</button>
+            {% elif session.user_id %}
+                <a href="#payment" class="btn btn-primary btn-block">Fazer Upgrade</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Começar Agora</a>
+            {% endif %}
+        </div>
+
+        <!-- PLANO PRO -->
+        <div class="pricing-card pro">
+            <div class="plan-badge">Pro</div>
+            <h3>Pro</h3>
+            <div class="price">
+                <span class="amount">R$ 29,90</span>
+                <span class="period">/mês</span>
+            </div>
+            <p class="description">Para profissionais</p>
+            
+            <ul class="features">
+                <li>✅ 500 gerações por mês</li>
+                <li>✅ Todos os tipos de conteúdo</li>
+                <li>✅ Suporte 24/7</li>
+                <li>✅ Templates ilimitados</li>
+                <li>✅ Integração com ferramentas</li>
+                <li>❌ API customizada</li>
+            </ul>
+            
+            {% if session.user_id and session.plan == 'pro' %}
+                <button class="btn btn-primary btn-block" disabled>Seu Plano Atual</button>
+            {% elif session.user_id %}
+                <a href="#payment" class="btn btn-primary btn-block">Fazer Upgrade</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Começar Agora</a>
+            {% endif %}
+        </div>
+
+        <!-- PLANO ENTERPRISE -->
+        <div class="pricing-card enterprise">
+            <div class="plan-badge">Enterprise</div>
+            <h3>Enterprise</h3>
+            <div class="price">
+                <span class="amount">R$ 99,90</span>
+                <span class="period">/mês</span>
+            </div>
+            <p class="description">Para empresas</p>
+            
+            <ul class="features">
+                <li>✅ Gerações ilimitadas</li>
+                <li>✅ Todos os tipos de conteúdo</li>
+                <li>✅ Suporte dedicado 24/7</li>
+                <li>✅ Templates ilimitados</li>
+                <li>✅ Integração com ferramentas</li>
+                <li>✅ API customizada</li>
+                <li>✅ White-label disponível</li>
+            </ul>
+            
+            {% if session.user_id and session.plan == 'enterprise' %}
+                <button class="btn btn-primary btn-block" disabled>Seu Plano Atual</button>
+            {% elif session.user_id %}
+                <a href="#payment" class="btn btn-primary btn-block">Fazer Upgrade</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-block">Começar Agora</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- COMPARAÇÃO -->
+    <div class="comparison-section">
+        <h2>Comparar Planos</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Recurso</th>
+                    <th>Free</th>
+                    <th>Starter</th>
+                    <th>Pro</th>
+                    <th>Enterprise</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Gerações/mês</td>
+                    <td>5</td>
+                    <td>100</td>
+                    <td>500</td>
+                    <td>∞</td>
+                </tr>
+                <tr>
+                    <td>Tipos de conteúdo</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>Suporte</td>
+                    <td>Email</td>
+                    <td>Prioritário</td>
+                    <td>24/7</td>
+                    <td>Dedicado 24/7</td>
+                </tr>
+                <tr>
+                    <td>Templates</td>
+                    <td>Básicos</td>
+                    <td>Customizados</td>
+                    <td>Ilimitados</td>
+                    <td>Ilimitados</td>
+                </tr>
+                <tr>
+                    <td>Integração com ferramentas</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>API customizada</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>✅</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+        <h2>❓ Perguntas Frequentes</h2>
+        <div class="faq-item">
+            <h4>Posso mudar de plano a qualquer momento?</h4>
+            <p>Sim! Você pode fazer upgrade ou downgrade a qualquer momento. Mudanças entram em vigor imediatamente.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Há período de teste gratuito?</h4>
+            <p>Sim! O plano Free é para sempre, com 5 gerações por mês. Teste à vontade!</p>
+        </div>
+        <div class="faq-item">
+            <h4>Como faço para cancelar?</h4>
+            <p>Você pode cancelar a qualquer momento na sua página de perfil. Sem compromisso, sem multa.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Aceitam quais formas de pagamento?</h4>
+            <p>Aceitamos Pix, cartão de crédito e MercadoPago. Em breve, mais opções!</p>
+        </div>
+    </div>
+
+    <!-- CTA FINAL -->
+    <div class="cta-final">
+        <h2>Escolha Seu Plano e Comece a Ganhar Dinheiro Agora! 💰</h2>
+        <p>Milhares de profissionais já estão usando VendiAI para vender mais!</p>
+    </div>
+</div>
+{% endblock %}
