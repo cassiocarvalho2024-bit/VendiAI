@@ -1,0 +1,2 @@
+# VendiAI
+Projeto
